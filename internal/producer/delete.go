@@ -20,7 +20,7 @@ import (
 
 	"github.com/segmentio/kafka-go"
 
-	"github.com/superhero-delete/internal/producer/model"
+	"github.com/superhero-match/superhero-delete/internal/producer/model"
 )
 
 // DeleteSuperhero publishes new Superhero on Kafka topic for it to be
