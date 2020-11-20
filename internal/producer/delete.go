@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2020 MWSOFT
+  Copyright (C) 2019 - 2021 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -28,8 +28,6 @@ import (
 func(p *Producer) DeleteSuperhero(s model.Superhero) error {
 	var sb bytes.Buffer
 
-	key := s.ID
-
 	err := json.NewEncoder(&sb).Encode(s)
 	if err != nil {
 		return err
@@ -37,7 +35,6 @@ func(p *Producer) DeleteSuperhero(s model.Superhero) error {
 
 	err = p.Producer.WriteMessages(context.Background(),
 		kafka.Message{
-			Key:   []byte(key),
 			Value: sb.Bytes(),
 		},
 	)

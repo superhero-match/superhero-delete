@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2020 MWSOFT
+  Copyright (C) 2019 - 2021 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -46,13 +46,6 @@ func main() {
 
 		panic(err)
 	}
-
-	defer func() {
-		err = ctrl.Producer.Close()
-		if err != nil {
-			panic(err)
-		}
-	}()
 
 	_ = client.ShutdownHealthServer()
 }

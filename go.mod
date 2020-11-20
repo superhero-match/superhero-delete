@@ -5,4 +5,6 @@ go 1.14
 require (
 	github.com/gin-gonic/gin v1.6.2
 	github.com/jinzhu/configor v1.1.1
+	github.com/segmentio/kafka-go v0.4.5
+	go.uber.org/zap v1.16.0
 )

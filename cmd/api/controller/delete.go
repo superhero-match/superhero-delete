@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2020 MWSOFT
+  Copyright (C) 2019 - 2021 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -14,28 +14,57 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+
+	"github.com/superhero-match/superhero-delete/cmd/api/model"
 )
 
 // DeleteAccount deletes Superhero account.
 func (ctl *Controller) DeleteAccount(c *gin.Context) {
-	userID := c.Query("userID")
-	if userID == "" {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": "Internal server error!",
-		})
+	var req model.Request
+
+	err := c.BindJSON(&req)
+	if checkError(err, c) {
+		ctl.Service.Logger.Error(
+			"failed to bind JSON to value of type Superhero",
+			zap.String("err", err.Error()),
+			zap.String("time", time.Now().UTC().Format(ctl.Service.TimeFormat)),
+		)
 
 		return
 	}
 
-	fmt.Println(userID)
-
-	c.JSON(http.StatusCreated, gin.H{
-		"status":  http.StatusCreated,
-		"message": "Account deleted successfully!",
+	err = ctl.Service.DeleteSuperhero(model.Superhero{
+		ID:        req.ID,
+		DeletedAt: time.Now().UTC().Format(ctl.Service.TimeFormat),
 	})
+	if checkError(err, c) {
+		ctl.Service.Logger.Error(
+			"failed while executing service.DeleteSuperhero()",
+			zap.String("err", err.Error()),
+			zap.String("time", time.Now().UTC().Format(ctl.Service.TimeFormat)),
+		)
+
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": http.StatusOK,
+	})
+}
+
+func checkError(err error, c *gin.Context) bool {
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": http.StatusInternalServerError,
+		})
+
+		return true
+	}
+
+	return false
 }

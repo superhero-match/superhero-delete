@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2020 MWSOFT
+  Copyright (C) 2019 - 2021 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -15,24 +15,30 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/superhero-match/superhero-delete/cmd/api/service"
 
 	"github.com/superhero-match/superhero-delete/internal/config"
-	"github.com/superhero-match/superhero-delete/internal/producer"
 )
 
 const (
 	timeFormat = "2006-01-02T15:04:05"
+	// time.Now().UTC().Format(r.TimeFormat))
 )
 
-// Controller holds the controller data.
+// Controller holds the Controller data.
 type Controller struct {
-	Producer *producer.Producer
+	Service *service.Service
 }
 
 // NewController returns new controller.
-func NewController(cfg *config.Config) (ctrl *Controller, err error) {
+func NewController(cfg *config.Config) (*Controller, error) {
+	srv, err := service.NewService(cfg)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Controller{
-		Producer: producer.NewProducer(cfg),
+		Service: srv,
 	}, nil
 }
 

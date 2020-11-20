@@ -11,19 +11,33 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package health
+package service
 
 import (
-	"net/http"
+	"github.com/superhero-match/superhero-delete/internal/config"
+	"github.com/superhero-match/superhero-delete/internal/producer"
+	"go.uber.org/zap"
 )
 
-// ShutdownHealthServer sends shutdown signal to health server. This shutdown signal is sent only when API server
-// is panicking and is about to be shutdown to notify loadbalancer that API is un-healthy.
-func (c *Client) ShutdownHealthServer () error {
-	_, err := http.Post(c.HealthServerURL, c.ContentType, nil)
+// Service holds all the different services that are used when handling request.
+type Service struct {
+	Producer   *producer.Producer
+	Logger     *zap.Logger
+	TimeFormat string
+}
+
+// NewService creates value of type Service.
+func NewService(cfg *config.Config) (*Service, error) {
+	logger, err := zap.NewProduction()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	defer logger.Sync()
+
+	return &Service{
+		Producer:   producer.NewProducer(cfg),
+		Logger:     logger,
+		TimeFormat: cfg.App.TimeFormat,
+	}, nil
 }

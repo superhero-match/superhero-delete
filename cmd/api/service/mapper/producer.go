@@ -11,19 +11,17 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package health
+package mapper
 
 import (
-	"net/http"
+	am "github.com/superhero-match/superhero-delete/cmd/api/model"
+	"github.com/superhero-match/superhero-delete/internal/producer/model"
 )
 
-// ShutdownHealthServer sends shutdown signal to health server. This shutdown signal is sent only when API server
-// is panicking and is about to be shutdown to notify loadbalancer that API is un-healthy.
-func (c *Client) ShutdownHealthServer () error {
-	_, err := http.Post(c.HealthServerURL, c.ContentType, nil)
-	if err != nil {
-		return err
+// MapAPISuperheroToProducer maps API Superhero model to Producer Superhero model.
+func MapAPISuperheroToProducer(superhero am.Superhero) model.Superhero {
+	return model.Superhero{
+		ID:        superhero.ID,
+		DeletedAt: superhero.DeletedAt,
 	}
-
-	return nil
 }
