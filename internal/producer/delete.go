@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -23,9 +23,9 @@ import (
 	"github.com/superhero-match/superhero-delete/internal/producer/model"
 )
 
-// DeleteSuperhero publishes new Superhero on Kafka topic for it to be
+// DeleteSuperhero publishes delete Superhero message on Kafka topic for it to be
 // consumed by consumer and updated in DB and Elasticsearch.
-func(p *Producer) DeleteSuperhero(s model.Superhero) error {
+func (p *producer) DeleteSuperhero(s model.Superhero) error {
 	var sb bytes.Buffer
 
 	err := json.NewEncoder(&sb).Encode(s)

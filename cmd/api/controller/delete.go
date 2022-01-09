@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -29,10 +29,10 @@ func (ctl *Controller) DeleteAccount(c *gin.Context) {
 
 	err := c.BindJSON(&req)
 	if checkError(err, c) {
-		ctl.Service.Logger.Error(
+		ctl.Logger.Error(
 			"failed to bind JSON to value of type Superhero",
 			zap.String("err", err.Error()),
-			zap.String("time", time.Now().UTC().Format(ctl.Service.TimeFormat)),
+			zap.String("time", time.Now().UTC().Format(ctl.TimeFormat)),
 		)
 
 		return
@@ -40,13 +40,13 @@ func (ctl *Controller) DeleteAccount(c *gin.Context) {
 
 	err = ctl.Service.DeleteSuperhero(model.Superhero{
 		ID:        req.ID,
-		DeletedAt: time.Now().UTC().Format(ctl.Service.TimeFormat),
+		DeletedAt: time.Now().UTC().Format(ctl.TimeFormat),
 	})
 	if checkError(err, c) {
-		ctl.Service.Logger.Error(
+		ctl.Logger.Error(
 			"failed while executing service.DeleteSuperhero()",
 			zap.String("err", err.Error()),
-			zap.String("time", time.Now().UTC().Format(ctl.Service.TimeFormat)),
+			zap.String("time", time.Now().UTC().Format(ctl.TimeFormat)),
 		)
 
 		return
